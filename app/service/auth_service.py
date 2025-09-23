@@ -70,7 +70,7 @@ def get_current_token_payload(
     return payload
 
 
-async def getcurrent_auth_user(
+async def get_current_auth_user(
     payload: dict = Depends(get_current_token_payload),
     db: AsyncSession = Depends(get_db),
 ) -> UserSchema:
@@ -95,7 +95,7 @@ async def getcurrent_auth_user(
 
 
 async def get_current_active_user(
-    user: UserSchema = Depends(getcurrent_auth_user),
+    user: UserSchema = Depends(get_current_auth_user),
 ) -> UserSchema:
     """Гарантирует, что текущий пользователь активен.
 
