@@ -1,17 +1,28 @@
+from typing import Optional
+from uuid import UUID, uuid4
+
 from app.db.base_class import BaseModel
-from sqlalchemy import String, Boolean, LargeBinary
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy import String, Boolean, Column, LargeBinary
+from sqlmodel import Field
 
 
-class User(BaseModel):
+
+class Users(BaseModel, table=True):
     """Модель пользователя системы.
 
     Содержит учетные данные и профильные атрибуты. Пароль хранится в виде
     bcrypt-хэша (bytes). Поле `is_active` определяет доступ к системе.
     """
-    __tablename__ = "users"
 
-    username: Mapped[str] = mapped_column(String(50), unique=True, index=True, nullable=False)
-    password: Mapped[bytes] = mapped_column(LargeBinary, nullable=False)
-    email: Mapped[str | None] = mapped_column(String(255), unique=True, index=True, nullable=True)
-    is_active: Mapped[bool] = mapped_column(Boolean, default=True, nullable=False)
+    id: Optional[UUID] = Field(
+        default_factory=uuid4,
+        primary_key=True,
+    )
+    username: str = Field(
+        sa_column=Column(String(50), unique=True, index=True, nullable=False)
+    )
+    email: str = Field(
+        sa_column=Column(String(255), unique=True, index=True, nullable=False)
+    )
+    password: bytes = Field(sa_column=Column(LargeBinary, nullable=False))
+    is_active: bool = Field(default=True, sa_column=Column(Boolean, nullable=False))
